@@ -1,0 +1,51 @@
+<html><head><style>body {
+   color: black;
+}
+</style>
+<script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/3.1.0/jquery-3.1.0.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("tbody").on("click",".remove",function(){
+		$(this).closest('tr').remove();
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){
+	$("div").on("click",".add",function(){
+		$("tbody").append('<tr><td>栏目一数据</td><td>栏目二数据</td><td>栏目三数据</td><td><button class="remove">删除</button></td></tr>');
+	});
+});
+</script>
+</head>
+
+<body>
+<table>
+    <thead>
+        <tr>
+            <th>栏目一</th>
+            <th>栏目二</th>
+            <th>栏目三</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>栏目一数据1</td>
+            <td>栏目二数据1</td>
+            <td>栏目三数据1</td>
+            <td><button class="remove">删除</button></td>
+        </tr>
+        <tr>
+            <td>栏目一数据2</td>
+            <td>栏目二数据2</td>
+            <td>栏目三数据2</td>
+            <td><button class="remove">删除</button></td>
+        </tr>
+    </tbody>
+</table>
+<div>
+<button class="add">增加一行</button>
+</div>
+</body></html>
+
