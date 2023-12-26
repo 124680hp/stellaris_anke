@@ -1,27 +1,31 @@
-.column{
+.columns{
+	margin: 10px;
 	display: flex;
 	width: 70%;
-	height: 200px;
-	justify-content: space-between;
-	outline: 1px solid #000;
+	flex-direction: column;
+	padding: 10px;
+	
 	overflow: hidden;
 }
 
-.even{
+.column{
+	display: flex;
+	text-align: top;
+	justify-content: flex-start;
+	margin-top: 10px;
+	padding: 10px;
+	outline: 1px solid #000;
+}
+
+.column:nth-child(even){
 	background-color: #F8F8F8;
 }
-
-.odd{
-	
-}
-
-
 
 .column pic{
 	top: 10px;
 }
 
-.pic img{
+.column img{
 	position: float;
 	width: 150px;
 	height: 200px;
