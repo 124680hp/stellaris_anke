@@ -1,0 +1,45 @@
+.column{
+	display: flex;
+	width: 70%;
+	height: 200px;
+	justify-content: space-between;
+	outline: 1px solid #000;
+	overflow: hidden;
+}
+
+.even{
+	background-color: #F8F8F8;
+}
+
+.odd{
+	
+}
+
+
+
+.column pic{
+	top: 10px;
+}
+
+.pic img{
+	position: float;
+	width: 150px;
+	height: 200px;
+}
+
+.column text-box{
+	width: 100%;
+	height: 100%;
+	display: inline-box;
+	vertical-align: left;
+}
+
+.column title{
+	padding: 0;
+	margin: 0;
+}
+
+.column detail{
+	padding: 0;
+	margin: 0;	
+}
