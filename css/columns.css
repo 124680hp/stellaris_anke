@@ -28,20 +28,4 @@
 	
 }
 
-.column text-box{
-	width: 100%;
-	height: 100%;
-	padding: 5px;
-	display: inline-box;
-	vertical-align: left;
-}
 
-.column title{
-	padding: 0;
-	margin: 0;
-}
-
-.column detail{
-	padding: 0;
-	margin: 0;	
-}

@@ -1,0 +1,17 @@
+.detail_column{
+	width: 80%;
+	display: flex;
+	text-align: top;
+	vertical-align: left;
+	margin-top: 10px;
+	padding: 5px;
+	
+	background-color: Wheat;
+}
+
+.box{
+	width: 50%;
+	padding: 5px;
+	display: inline-box;
+	justify-content: flex-start;
+}
