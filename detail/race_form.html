@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html><head><style>body {
+   color: black;
+}
+</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>群星个人安科-数据</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+</head>
+<link rel="stylesheet" href="../css/index.css" />
+<link rel="stylesheet" href="../css/form.css" />
+
+<body>
+<div>
+<div class="header">
+	<div class="dropdown">
+		<a href="../index.html">
+			<button class="dropbtn">首页</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../index.html">前往首页</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../background/index.html">
+			<button class="dropbtn">背景描述</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../background/index.html">背景描述</a>
+			<a href="#">测试1</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../detail/index.html">
+			<button class="dropbtn">现有数据</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../detail/index.html">现有数据</a>
+			<a href="../detail/character.html">角色列表</a>
+			<a href="../detail/character_form.html">新建角色</a>
+			<a href="../detail/race.html">种族列表</a>
+			<a href="../detail/race_form.html">新建种族</a>
+			<a href="../detail/item.html">道具列表</a>
+			<a href="../detail/item_form.html">新建道具</a>
+			<a href="../detail/skill.html">技能列表</a>
+			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/bonus.html">杂项</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../story/index.html">
+			<button class="dropbtn">安科内容</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../story/index.html">安科内容</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../share/index.html">
+			<button class="dropbtn">网站分享</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../share/index.html">网站分享</a>
+		</div>
+	</div>
+</div>
+</div>
+<div class="container">
+	<div class="content">
+		<h1>新建种族</h1>
+		<form action="" method="post" style="margin: auto;" id="race_form">
+			<div class="form_item">
+				<p class="title">种族名：</p>
+				<input type="text" value="人类" id="name" name="name" />
+			</div>
+			<div class="form_item">
+				<p class="title">别名：</p>
+				<input type="text" value="无" id="alias" name="alias" />
+			</div>
+			<div class="form_item" id="ability_scores">
+				<p class="title">属性值：</p>
+				力量：<input type="text" value="50" id="strength" name="strength" />
+				意志：<input type="text" value="50" id="wisdom" name="wisdom" />
+				体质：<input type="text" value="50" id="constitution" name="constitution" />
+				智力：<input type="text" value="50" id="intelligence" name="intelligence" />
+				感知：<input type="text" value="50" id="sense" name="sense" />
+				魅力：<input type="text" value="50" id="charisma" name="charisma" />
+				口才：<input type="text" value="50" id="eloquence" name="eloquence" />
+				灵敏：<input type="text" value="50" id="dexterity" name="dexterity" />
+			</div>
+			<div class="form_item">
+				<p class="title">来自：</p>
+				<select name="from" id="origin">
+					<option>切尔纳星球</option>
+					<option>派奥伦星球</option>
+					<option selected="true">其它</option>
+				</select>
+			</div>
+			<div class="form_item">
+				<p class="title">天生拥有技能以及被动（仅填名字）：</p>
+				<textarea name="skills" id="skills" cols="30" rows="10" >无</textarea>
+			</div>
+			<div class="form_item">
+				<p class="title">种族详细描述：</p>
+				<textarea name="detail" id="detail" cols="30" rows="10" >来自地球</textarea>
+			</div>
+			<div class="form_item">
+				<input type="submit" value="提交" />
+			</div>
+        </form>
+	</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('race_form');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 防止表单默认提交行为
+		
+        // 收集表单数据，用f_type确认表单类型以便之后读取生成在不同的网页
+        var formData = {
+			f_type: "race",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+            strength: document.getElementById('strength').value,
+            wisdom: document.getElementById('wisdom').value,
+            constitution: document.getElementById('constitution').value,
+            intelligence: document.getElementById('intelligence').value,
+            sense: document.getElementById('sense').value,
+            charisma: document.getElementById('charisma').value,
+            eloquence: document.getElementById('eloquence').value,
+            dexterity: document.getElementById('dexterity').value,
+			origin: document.getElementById('origin').value,
+			skills: document.getElementById('skills').value,
+			detail: document.getElementById('detail').value
+        };
+		
+		// 利用了 required 来保证所以表单项已被填写，因此不检查数据完整性
+		
+		// 使用uuidv4生成标识符以存储数据
+		var ID = uuidv4();
+		
+        // 使用 localForage 保存数据
+        localForage.setItem(ID, formData).then(function() {
+            console.log('表单内容已保存');
+            
+        }).catch(function(err) {
+            console.error('表单内容保存失败', err);
+        });
+    });
+});
+</script>
+</body></html>

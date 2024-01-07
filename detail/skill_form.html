@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html><head><style>body {
+   color: black;
+}
+</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>群星个人安科-数据</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+</head>
+<link rel="stylesheet" href="../css/index.css" />
+<link rel="stylesheet" href="../css/form.css" />
+
+<body>
+<div class="header">
+	<div class="dropdown">
+		<a href="../index.html">
+			<button class="dropbtn">首页</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../index.html">前往首页</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../background/index.html">
+			<button class="dropbtn">背景描述</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../background/index.html">背景描述</a>
+			<a href="#">测试1</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../detail/index.html">
+			<button class="dropbtn">现有数据</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../detail/index.html">现有数据</a>
+			<a href="../detail/character.html">角色列表</a>
+			<a href="../detail/character_form.html">新建角色</a>
+			<a href="../detail/race.html">种族列表</a>
+			<a href="../detail/race_form.html">新建种族</a>
+			<a href="../detail/item.html">道具列表</a>
+			<a href="../detail/item_form.html">新建道具</a>
+			<a href="../detail/skill.html">技能列表</a>
+			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/bonus.html">杂项</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../story/index.html">
+			<button class="dropbtn">安科内容</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../story/index.html">安科内容</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../share/index.html">
+			<button class="dropbtn">网站分享</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../share/index.html">网站分享</a>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<div class="content">
+		<h1>新建技能（天赋）</h1>
+		<form action="" method="post" style="margin: auto; min-width: 100%;" id="skill_form">
+			<div class="form_item">
+				<p class="title">技能（天赋）名：</p>
+				<input type="text" value="嘲讽" required id="name" name="name" />
+			</div>
+			<div class="form_item">
+				<p class="title">简称：</p>
+				<input type="text" value="无" required id="alias" name="alias" />
+			</div>
+			<div class="form_item" id="type">
+				<p class="title">所属类别：</p>
+				<label><input type="radio" id="passive" name="type" value="被动" onclick="HideByType()"/>被动</label>
+				<label><input type="radio" id="active" name="type" value="主动" checked="checked" onclick="HideByType()"/>主动</label>
+				<label><input type="radio" id="both" name="type" value="混合型" onclick="HideByType()"/>混合型（同时有主被动效果）</label>
+			</div>
+			<div class="form_item" id="cd">
+				<p class="title">冷却时间：</p>
+				<input type="text" value="2回合" id="cd" name="cd" />
+			</div>
+			<div class="form_item" id="active_effect">
+				<p class="title">主动效果：</p>
+				<textarea name="active_effect" cols="30" rows="10" >强制目标对使用者进行一次普攻</textarea>
+			</div>
+			<div class="form_item unused" id="passive_effect">
+				<p class="title">被动效果：</p>
+				<textarea name="passive_effect" cols="30" rows="10" >无</textarea>
+			</div>
+			<div class="form_item">
+				<p class="title">技能详细描述：</p>
+				<textarea name="detail" id="detail" required cols="30" rows="10" >经典嘲讽</textarea>
+			</div>
+			<div class="form_item" id="submit">
+				<input type="submit" value="提交" />
+			</div>
+        </form>
+	</div>
+</div>
+<script>
+	function HideByType() { //根据所选的类型隐藏相应的表单项
+		var selectedValue = $('input[name=type]:checked').val(); //获取选中的值
+			if (selectedValue === '被动') {
+				$('#passive_effect').removeClass('unused');
+				$('#active_effect').addClass('unused');
+				$('#cd').addClass('unused');
+			}else if (selectedValue === '主动') {
+				$('#passive_effect').addClass('unused');
+				$('#active_effect').removeClass('unused');
+				$('#cd').removeClass('unused');
+			}else {
+				$('#passive_effect').removeClass('unused');
+				$('#active_effect').removeClass('unused');
+				$('#cd').removeClass('unused');
+			}
+		}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('skill_form');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 防止表单默认提交行为
+		
+		var s_type = document.querySelector('input[name="type"]:checked').value;
+		var formData = {};
+		
+		// 收集表单数据，用f_type确认表单类型以便之后读取生成在不同的网页，根据s_type修改收集的格式
+		if(s_type === '被动'){
+			var p_effect = document.querySelector('input[name="passive_effect"]');
+			
+			if (!p_effect) {
+				alert("还有表单项未填写，请完成填写");
+				return;
+			}
+			
+			formData = {
+			f_type: "skill",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			type: s_type,
+			passive_effect: p_effect.value,
+			detail: document.getElementById('detail').value
+			};
+		}else if(s_type === '主动'){
+			var cooldown = document.querySelector('input[name="cd"]');
+			var a_effect = document.querySelector('input[name="active_effect"]');
+			
+			if (!cooldown || !a_effect) {
+				alert("还有表单项未填写，请完成填写");
+				return;
+			}
+			
+			formData = {
+			f_type: "skill",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			type: s_type,
+			cd: cooldown.value,
+			active_effect: a_effect.value,
+			detail: document.getElementById('detail').value
+			};
+		}else{
+			var cooldown = document.querySelector('input[name="cd"]');
+			var a_effect = document.querySelector('input[name="active_effect"]');
+			var p_effect = document.querySelector('input[name="passive_effect"]');
+			
+			if (!p_effect || !cooldown || !a_effect) {
+				alert("还有表单项未填写，请完成填写");
+				return;
+			}
+			
+			formData = {
+			f_type: "skill",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			type: s_type,
+			cd: cooldown.value,
+			active_effect: a_effect.value,
+			passive_effect: p_effect.value,
+			detail: document.getElementById('detail').value
+			};
+		}
+		
+		// 使用uuidv4生成标识符以存储数据
+		var ID = uuidv4();
+		
+        // 使用 localForage 保存数据
+        localForage.setItem(ID, formData).then(function() {
+            console.log('表单内容已保存');
+            
+        }).catch(function(err) {
+            console.error('表单内容保存失败', err);
+        });
+    });
+});
+</script>
+</body></html>

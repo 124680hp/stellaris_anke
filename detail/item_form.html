@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html><head><style>body {
+   color: black;
+}
+</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>群星个人安科-数据</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+</head>
+<link rel="stylesheet" href="../css/index.css" />
+<link rel="stylesheet" href="../css/form.css" />
+
+<body>
+<div>
+<div class="header">
+	<div class="dropdown">
+		<a href="../index.html">
+			<button class="dropbtn">首页</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../index.html">前往首页</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../background/index.html">
+			<button class="dropbtn">背景描述</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../background/index.html">背景描述</a>
+			<a href="#">测试1</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../detail/index.html">
+			<button class="dropbtn">现有数据</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../detail/index.html">现有数据</a>
+			<a href="../detail/character.html">角色列表</a>
+			<a href="../detail/character_form.html">新建角色</a>
+			<a href="../detail/race.html">种族列表</a>
+			<a href="../detail/race_form.html">新建种族</a>
+			<a href="../detail/item.html">道具列表</a>
+			<a href="../detail/item_form.html">新建道具</a>
+			<a href="../detail/skill.html">技能列表</a>
+			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/bonus.html">杂项</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../story/index.html">
+			<button class="dropbtn">安科内容</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../story/index.html">安科内容</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../share/index.html">
+			<button class="dropbtn">网站分享</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../share/index.html">网站分享</a>
+		</div>
+	</div>
+</div>
+</div>
+<div class="container">
+	<div class="content">
+		<h1>新建物品</h1>
+		<form action="" method="post" style="margin: auto; min-width: 100%;" id="item_form">
+			<div class="form_item">
+				<p class="title">物品名：</p>
+				<input type="text" value="激光枪-mk1" id="name" required name="name" />
+			</div>
+			<div class="form_item">
+				<p class="title">别名：</p>
+				<input type="text" value="无" id="alias" required name="alias" />
+			</div>
+			<div class="form_item">
+				<p class="title">大小（写参考物或具体数值）：</p>
+				<input type="text" value="普通步枪" id="size" required name="size" />
+			</div>
+			<div class="form_item">
+				<p class="title">重量（需加上单位）：</p>
+				<input type="text" value="2kg" id="weight" required name="weight" />
+			</div>
+			<div class="form_item">
+				<p class="title">所属类别：</p>
+				<label><input type="radio" id="weapon" name="type" value="武器" checked="checked" onclick="HideByType()"/>武器</label>
+				<label><input type="radio" id="plot" name="type" value="剧情道具" onclick="HideByType()"/>剧情道具</label>
+				<label><input type="radio" id="consumable" name="type" value="消耗品" onclick="HideByType()"/>消耗品</label>
+				<label><input type="radio" id="trinket" name="type" value="饰品" onclick="HideByType()"/>饰品</label>
+				<label><input type="radio" id="armor" name="type" value="防具" onclick="HideByType()"/>防具</label>
+				<label><input type="radio" id="others" name="type" value="其它" onclick="HideByType()"/>其它</label>
+			</div>
+			<div class="form_item" id="weapon_type">
+				<p class="title">武器类别（混合类的单个武器可以当成两个不同的武器，需分为两个提交）：</p>
+				<label><input type="radio" id="melee" name="weapon_type" value="近战" />近战</label>
+				<label><input type="radio" id="ranged" name="weapon_type" value="远程"  checked="checked" />远程</label>
+			</div>
+			<div class="form_item" id="w_consuming">
+				<p class="title">攻击消耗：</p>
+				<input type="text" value="电量" id="w_consuming" name="w_consuming" />
+			</div>
+			<div class="form_item" id="w_consuming_num">
+				<p class="title">每次消耗量：</p>
+				<input type="text" value="1单位" id="w_consuming_num" name="w_consuming_num" />
+			</div>
+			<div class="form_item" id="attack_times">
+				<p class="title">一回合可多段攻击几次：</p>
+				<input type="text" value="4" pattern="[0-9]*" id="attack_times" name="attack_times" />
+			</div>
+			<div class="form_item" id="unpunished_attacks_times">
+				<p class="title">一回合可无惩罚多段攻击几次：</p>
+				<input type="text" value="2" pattern="[0-9]*" id="unpunished_attacks_times" name="unpunished_attacks_times" />
+			</div>
+			<div class="form_item" id="accuracy_affecting_ability_rate">
+				<p class="title">命中属性占比（0表示不计算）：</p>
+				力量：<input type="text" value="0" pattern="[0-9]*" id="ar_strength" name="strength" />
+				意志：<input type="text" value="0" pattern="[0-9]*" id="ar_wisdom" name="wisdom" />
+				体质：<input type="text" value="0" pattern="[0-9]*" id="ar_constitution" name="constitution" />
+				智力：<input type="text" value="0" pattern="[0-9]*" id="ar_intelligence" name="intelligence" />
+				感知：<input type="text" value="100" pattern="[0-9]*" id="ar_sense" name="sense" />
+				魅力：<input type="text" value="0" pattern="[0-9]*" id="ar_charisma" name="charisma" />
+				口才：<input type="text" value="0" pattern="[0-9]*" id="ar_eloquence" name="eloquence" />
+				灵敏：<input type="text" value="0" pattern="[0-9]*" id="ar_dexterity" name="dexterity" />
+			</div>
+			<div class="form_item" id="accuracy_affecting_stable_factors">
+				<p class="title">固定命中占比（这部分命中不受属性影响，0表示无需计算）：</p>
+				变化骰个数：<input type="text" value="1" pattern="[0-9]*" id="ar_vary_times" name="ar_vary_times" />
+				变化骰范围：<input type="text" value="0" pattern="[0-9]*" id="ar_variable" name="ar_variable" />
+				固定值：<input type="text" value="50" id="ar_stable" name="stable" />
+			</div>
+			<div class="form_item unused" id="damage_affecting_ability_rate">
+				<p class="title">伤害属性占比（0表示不计算）：</p>
+				力量：<input type="text" value="0" pattern="[0-9]*" id="dr_strength" name="strength" />
+				意志：<input type="text" value="0" pattern="[0-9]*" id="dr_wisdom" name="wisdom" />
+				体质：<input type="text" value="0" pattern="[0-9]*" id="dr_constitution" name="constitution" />
+				智力：<input type="text" value="0" pattern="[0-9]*" id="dr_intelligence" name="intelligence" />
+				感知：<input type="text" value="0" pattern="[0-9]*" id="dr_sense" name="sense" />
+				魅力：<input type="text" value="0" pattern="[0-9]*" id="dr_charisma" name="charisma" />
+				口才：<input type="text" value="0" pattern="[0-9]*" id="dr_eloquence" name="eloquence" />
+				灵敏：<input type="text" value="0" pattern="[0-9]*" id="dr_dexterity" name="dexterity" />
+			</div>
+			<div class="form_item" id="damage_affecting_stable_factors">
+				<p class="title">固定伤害占比（这部分伤害不受属性影响，0表示无需计算）：</p>
+				变化骰个数：<input type="text" value="1" pattern="[0-9]*" id="dr_vary_times" name="dr_vary_times" />
+				变化骰范围：<input type="text" value="0" pattern="[0-9]*" id="dr_variable" name="dr_variable" />
+				固定值：<input type="text" value="50" id="dr_stable" name="stable" />
+			</div>
+			<div class="form_item" id="weapon_characteristics">
+				<p class="title">武器特性：</p>
+				<label><input type="checkbox" id="sharp" name="wc" value="锋利"/>锋利</label>
+				<label><input type="checkbox" id="heavy" name="wc" value="沉重"/>沉重</label>
+				<label><input type="checkbox" id="poisonous" name="wc" value="毒性"/>毒性</label>
+				<label><input type="checkbox" id="burning" name="wc" value="燃烧"/>燃烧</label>
+				<label><input type="checkbox" id="blinding" name="wc" value="炫目"/>炫目</label>
+				<label><input type="checkbox" id="charged" name="wc" value="带电"/>带电</label>
+				<label><input type="checkbox" id="psionic" name="wc" value="灵能"/>灵能</label>
+				<label><input type="checkbox" id="w_unbreakable" name="wc" value="无法摧毁"/>无法摧毁</label>
+				<label><input type="checkbox" id="freezing" name="wc" value="寒冷"/>寒冷</label>
+				<label><input type="checkbox" id="vampiric" name="wc" value="吸血"/>吸血</label>
+				<label><input type="checkbox" id="fatal" name="wc" value="致命"/>致命</label>
+			</div>
+			<div class="form_item unused" id="c_consuming_num">
+				<p class="title">每次消耗量：</p>
+				<input type="text" value="1" id="c_consuming_num" name="c_consuming_num" />
+			</div>
+			<div class="form_item unused" id="c_consuming_effect">
+				<p class="title">消耗效果：</p>
+				<input type="text" value="恢复*点血量" id="c_consuming_effect" name="c_consuming_effect" />
+			</div>
+			<div class="form_item unused" id="armor_effect">
+				<p class="title">防具效果（0表示无抗性，负数表示负抗性）：</p>
+				抗锐器：<input type="text" value="0"  id="anti_sharp_rate" name="armor_effect" />
+				抗钝器：<input type="text" value="0" id="anti_heavy_rate" name="armor_effect" />
+				抗近战：<input type="text" value="0" id="anti_melee_rate" name="armor_effect" />
+				抗远程：<input type="text" value="0" id="anti_ranged_rate" name="armor_effect" />
+				防火：<input type="text" value="0" id="anti_buring_rate" name="armor_effect" />
+				防电：<input type="text" value="0" id="anti_electricity_rate" name="armor_effect" />
+				抗寒：<input type="text" value="0" id="anti_freezing_rate" name="armor_effect" />
+				防闪光：<input type="text" value="0" id="anti_blinding_rate" name="armor_effect" />
+				抗灵能：<input type="text" value="0" id="anti_psionic_rate" name="armor_effect" />
+				近战反伤：<input type="text" value="0" id="counter_melee_rate" name="armor_effect" />
+				远程反伤：<input type="text" value="0" id="counter_ranged_rate" name="armor_effect" />
+			</div>
+			<div class="form_item">
+				<p class="title">附带技能以及被动：</p>
+				<textarea name="skills" id="skills" required cols="30" rows="10" >无</textarea>
+			</div>
+			<div class="form_item">
+				<p class="title">物品详细描述：</p>
+				<textarea name="detail" id="detail" required cols="30" rows="10" >充电式的激光枪mk1型，最大充电数为10，充电方式……</textarea>
+			</div>
+			<div class="form_item" id="submit">
+				<input type="submit" value="提交" />
+			</div>
+        </form>
+	</div>
+</div>
+<script>
+	function HideByType() { //根据所选的类型隐藏相应的表单项
+		var selectedValue = $('input[name=type]:checked').val(); //获取选中的值
+			if (selectedValue === '武器') {
+				$('#weapon_type').removeClass('unused');
+				$('#w_consuming').removeClass('unused');
+				$('#w_consuming_num').removeClass('unused');
+				$('#attack_times').removeClass('unused');
+				$('#unpunished_attacks_times').removeClass('unused');
+				$('#accuracy_affecting_ability_rate').removeClass('unused');
+				$('#accuracy_affecting_stable_factors').removeClass('unused');
+				$('#damage_affecting_ability_rate').removeClass('unused');
+				$('#damage_affecting_stable_factors').removeClass('unused');
+				$('#weapon_characteristics').removeClass('unused');
+				$('#c_consuming_num').addClass('unused');
+				$('#c_consuming_effect').addClass('unused');
+				$('#armor_effect').addClass('unused');
+			}else if (selectedValue === '消耗品') {
+				$('#weapon_type').addClass('unused');
+				$('#w_consuming').addClass('unused');
+				$('#w_consuming_num').addClass('unused');
+				$('#attack_times').addClass('unused');
+				$('#unpunished_attacks_times').addClass('unused');
+				$('#accuracy_affecting_ability_rate').addClass('unused');
+				$('#accuracy_affecting_stable_factors').addClass('unused');
+				$('#damage_affecting_ability_rate').addClass('unused');
+				$('#damage_affecting_stable_factors').addClass('unused');
+				$('#weapon_characteristics').addClass('unused');
+				$('#c_consuming_num').removeClass('unused');
+				$('#c_consuming_effect').removeClass('unused');
+				$('#armor_effect').addClass('unused');
+			}else if (selectedValue === '防具') {
+				$('#weapon_type').addClass('unused');
+				$('#w_consuming').addClass('unused');
+				$('#w_consuming_num').addClass('unused');
+				$('#attack_times').addClass('unused');
+				$('#unpunished_attacks_times').addClass('unused');
+				$('#accuracy_affecting_ability_rate').addClass('unused');
+				$('#accuracy_affecting_stable_factors').addClass('unused');
+				$('#damage_affecting_ability_rate').addClass('unused');
+				$('#damage_affecting_stable_factors').addClass('unused');
+				$('#weapon_characteristics').addClass('unused');
+				$('#c_consuming_num').addClass('unused');
+				$('#c_consuming_effect').addClass('unused');
+				$('#armor_effect').removeClass('unused');
+			}else {
+				$('#weapon_type').addClass('unused');
+				$('#w_consuming').addClass('unused');
+				$('#w_consuming_num').addClass('unused');
+				$('#attack_times').addClass('unused');
+				$('#unpunished_attacks_times').addClass('unused');
+				$('#accuracy_affecting_ability_rate').addClass('unused');
+				$('#accuracy_affecting_stable_factors').addClass('unused');
+				$('#damage_affecting_ability_rate').addClass('unused');
+				$('#damage_affecting_stable_factors').addClass('unused');
+				$('#weapon_characteristics').addClass('unused');
+				$('#c_consuming_num').addClass('unused');
+				$('#c_consuming_effect').addClass('unused');
+				$('#armor_effect').addClass('unused');
+			}
+		}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('item_form');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 防止表单默认提交行为
+		
+		var i_type = document.querySelector('input[name="type"]:checked').value;
+		var formData = {};
+		
+		// 收集表单数据，用f_type确认表单类型以便之后读取生成在不同的网页，根据s_type修改收集的格式
+		if(i_type === '武器'){
+			var w_type = document.querySelector('input[name="weapon_type"]:checked').value;
+			var w_consuming = document.querySelector('input[name="w_consuming"]');
+			var w_consuming_num = document.querySelector('input[name="w_consuming_num"]');
+			var attack_times = document.querySelector('input[name="attack_times"]');
+			var unpunished_attacks_times = document.querySelector('input[name="unpunished_attacks_times"]');
+			
+			var ar_strength = document.getElementById('ar_strength').value;
+            var ar_wisdom = document.getElementById('ar_wisdom').value;
+            var ar_constitution = document.getElementById('ar_constitution').value;
+            var ar_intelligence = document.getElementById('ar_intelligence').value;
+            var ar_sense = document.getElementById('ar_sense').value;
+            var ar_charisma = document.getElementById('ar_charisma').value;
+            var ar_eloquence = document.getElementById('ar_eloquence').value;
+            var ar_dexterity = document.getElementById('ar_dexterity').value;
+			
+			var ar_vary_times = document.getElementById('ar_vary_times').value;
+			var ar_variable = document.getElementById('ar_variable').value;
+			var ar_stable = document.getElementById('ar_stable').value;
+			
+			var dr_strength = document.getElementById('dr_strength').value;
+            var dr_wisdom = document.getElementById('dr_wisdom').value;
+            var dr_constitution = document.getElementById('dr_constitution').value;
+            var dr_intelligence = document.getElementById('dr_intelligence').value;
+            var dr_sense = document.getElementById('dr_sense').value;
+            var dr_charisma = document.getElementById('dr_charisma').value;
+            var dr_eloquence = document.getElementById('dr_eloquence').value;
+            var dr_dexterity = document.getElementById('dr_dexterity').value;
+			
+			var dr_vary_times = document.getElementById('dr_vary_times').value;
+			var dr_variable = document.getElementById('dr_variable').value;
+			var dr_stable = document.getElementById('dr_stable').value;
+			
+			var wcs = document.querySelectorAll('input[name="wc"]:checked');
+			
+			if (
+				!w_consuming ||
+				!w_consuming_num
+			) {
+				alert("武器部分的消耗部分的表单内容未填完，无消耗请填入无。");
+				return;
+			}
+			
+			if (
+				!attack_times ||
+				!unpunished_attacks_times 
+			) {
+				alert("武器部分的攻击次数部分的表单内容未填完。");
+				return;
+			}
+			
+			if (
+				attack_times.value === '0' ||
+				unpunished_attacks_times.value === '0'
+			) {
+				alert("武器部分的攻击次数部分的表单内容不可为0，请填入正数。");
+				return;
+			}
+			
+			if (
+				!ar_strength ||
+				!ar_wisdom ||
+				!ar_constitution ||
+				!ar_intelligence ||
+				!ar_sense ||
+				!ar_charisma ||
+				!ar_eloquence ||
+				!ar_dexterity ||
+				!ar_vary_times ||
+				!ar_variable ||
+				!ar_stable ||
+				!dr_strength ||
+				!dr_wisdom ||
+				!dr_constitution ||
+				!dr_intelligence ||
+				!dr_sense ||
+				!dr_charisma ||
+				!dr_eloquence ||
+				!dr_dexterity ||
+				!dr_vary_times ||
+				!dr_variable ||
+				!dr_stable
+			) {
+				alert("武器部分的计算公式部分的表单内容未填完，不计算部分请填入0。");
+				return;
+			}
+			
+			formData = {
+			f_type: "item",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			size: document.getElementById('size').value,
+			weight: document.getElementById('weight').value,
+			type: i_type,
+			weapon_type: w_type,
+			w_consuming: w_consuming.value,
+			w_consuming_num: w_consuming_num.value,
+			attack_times: attack_times.value,
+			unpunished_attacks_times: unpunished_attacks_times.value,
+			ar_strength: ar_strength,
+			ar_wisdom: ar_wisdom,
+			ar_constitution: ar_constitution,
+			ar_intelligence: ar_intelligence,
+			ar_sense: ar_sense,
+			ar_charisma: ar_charisma,
+			ar_eloquence: ar_eloquence,
+			ar_dexterity: ar_dexterity,
+			ar_vary_times: ar_vary_times,
+			ar_variable: ar_variable,
+			ar_stable: ar_stable,
+			dr_strength: dr_strength,
+			dr_wisdom: dr_wisdom,
+			dr_constitution: dr_constitution,
+			dr_intelligence: dr_intelligence,
+			dr_sense: dr_sense,
+			dr_charisma: dr_charisma,
+			dr_eloquence: dr_eloquence,
+			dr_dexterity: dr_dexterity,
+			dr_vary_times: dr_vary_times,
+			dr_variable: dr_variable,
+			dr_stable: dr_stable,
+			wc: Array.from(wcs).map(function (checkbox) {
+			return checkbox.value;}),
+			skills: document.getElementById('skills').value,
+			detail: document.getElementById('detail').value
+			};
+		}else if(i_type === '防具'){
+			var anti_blinding_rate = document.getElementById('anti_blinding_rate').value;
+			var anti_buring_rate = document.getElementById('anti_buring_rate').value;
+			var anti_electricity_rate = document.getElementById('anti_electricity_rate').value;
+			var anti_freezing_rate = document.getElementById('anti_freezing_rate').value;
+			var anti_heavy_rate = document.getElementById('anti_heavy_rate').value;
+			var anti_melee_rate = document.getElementById('anti_melee_rate').value;
+			var anti_psionic_rate = document.getElementById('anti_psionic_rate').value;
+			var anti_ranged_rate = document.getElementById('anti_ranged_rate').value;
+			var counter_melee_rate = document.getElementById('counter_melee_rate').value;
+			var counter_ranged_rate = document.getElementById('counter_ranged_rate').value;
+			
+			if (
+				!anti_blinding_rate ||
+				!anti_buring_rate ||
+				!anti_electricity_rate ||
+				!anti_freezing_rate ||
+				!anti_heavy_rate ||
+				!anti_melee_rate ||
+				!anti_psionic_rate ||
+				!anti_ranged_rate ||
+				!counter_melee_rate ||
+				!counter_ranged_rate
+			) {
+				alert("还有防具特性表单项未填写，请完成填写。");
+				return;
+			}
+			
+			formData = {
+			f_type: "item",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			size: document.getElementById('size').value,
+			weight: document.getElementById('weight').value,
+			type: i_type,
+			anti_blinding_rate: anti_blinding_rate,
+			anti_buring_rate: anti_buring_rate,
+			anti_electricity_rate: anti_electricity_rate,
+			anti_freezing_rate: anti_freezing_rate,
+			anti_heavy_rate: anti_heavy_rate,
+			anti_melee_rate: anti_melee_rate,
+			anti_psionic_rate: anti_psionic_rate,
+			anti_ranged_rate: anti_ranged_rate,
+			counter_melee_rate: counter_melee_rate,
+			counter_ranged_rate: counter_ranged_rate,
+			skills: document.getElementById('skills').value,
+			detail: document.getElementById('detail').value
+			};
+		}else if(i_type === '消耗品'){
+			var c_consuming_effect = document.getElementById('c_consuming_effect').value;
+			var c_consuming_num = document.getElementById('c_consuming_num').value;
+			
+			if (!c_consuming_effect || !c_consuming_num) {
+				alert("还有表单项未填写，请完成填写");
+				return;
+			}
+			
+			formData = {
+			f_type: "item",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			size: document.getElementById('size').value,
+			weight: document.getElementById('weight').value,
+			type: i_type,
+			c_consuming_effect: c_consuming_effect,
+			c_consuming_num: c_consuming_num,
+			skills: document.getElementById('skills').value,
+			detail: document.getElementById('detail').value
+			};
+		}else{
+			formData = {
+			f_type: "item",
+            name: document.getElementById('name').value,
+            alias: document.getElementById('alias').value,
+			size: document.getElementById('size').value,
+			weight: document.getElementById('weight').value,
+			type: i_type,
+			skills: document.getElementById('skills').value,
+			detail: document.getElementById('detail').value
+			};
+		}
+		
+		// 使用uuidv4生成标识符以存储数据
+		var ID = uuidv4();
+		
+        // 使用 localForage 保存数据
+        localForage.setItem(ID, formData).then(function() {
+            console.log('表单内容已保存');
+            
+        }).catch(function(err) {
+            console.error('表单内容保存失败', err);
+        });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	// 固定值部分可以为负，其余仅数字部分使用pattern限制
+    var elements = document.getElementsByName('stable');
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].addEventListener('input', function(e) {
+            var value = e.target.value;
+
+            // 检查值是否符合要求：仅数字和首位的负号
+            var newValue = value.replace(/[^0-9-]/g, ''); // 移除除数字和负号以外的所有字符
+
+            // 确保负号只出现在首位
+            var hasNegativeSign = newValue.includes('-');
+            if (hasNegativeSign) {
+                // 移除除首位以外的所有负号
+                newValue = newValue.charAt(0) === '-' ? '-' + newValue.replace(/-/g, '') : newValue.replace(/-/g, '');
+            }
+
+            // 如果修正后的值和原始值不一致，更新输入框的值
+            if (newValue !== value) {
+                e.target.value = newValue;
+            }
+        });
+    }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	// 防具效果部分也可以为负，其余仅数字部分不使用pattern限制
+    var elements = document.getElementsByName('armor_effect');
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].addEventListener('input', function(e) {
+            var value = e.target.value;
+
+            // 检查值是否符合要求：仅数字和首位的负号
+            var newValue = value.replace(/[^0-9-]/g, ''); // 移除除数字和负号以外的所有字符
+
+            // 确保负号只出现在首位
+            var hasNegativeSign = newValue.includes('-');
+            if (hasNegativeSign) {
+                // 移除除首位以外的所有负号
+                newValue = newValue.charAt(0) === '-' ? '-' + newValue.replace(/-/g, '') : newValue.replace(/-/g, '');
+            }
+
+            // 如果修正后的值和原始值不一致，更新输入框的值
+            if (newValue !== value) {
+                e.target.value = newValue;
+            }
+        });
+    }
+});
+</script>
+</body></html>

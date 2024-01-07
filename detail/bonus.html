@@ -5,12 +5,14 @@
 </style>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>群星个人安科-安科文本</title>
+<title>个人安科-网站分享</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <link rel="stylesheet" href="../css/index.css" />
+<link rel="stylesheet" href="../css/slider.css" />
 
 <body>
-<div>
 <div class="header">
 	<div class="dropdown">
 		<a href="../index.html">
@@ -63,34 +65,42 @@
 		</div>
 	</div>
 </div>
-</div>
 <div class="container">
 	<div class="content">
-		<h1>本子网页包括一些我已经创造出来的群星安科文本内容</h1>
-		<p>如果不了解安科是什么或者群星是什么的话，我强烈推荐先到本网站的子网页<a href="../background/index.html">背景描述</a>种了解相关内容</p>
-		<p>本子网页包括的安科文本仅包含部分内容，如果对我的群星安科文本感兴趣可以前往<a href="https://www.gululuworld.com/book/23256">骨碌碌世界中我的安科</a>去看更多内容，不过我也可能在本网页更新一些隐藏版内容</p>
-		
-		<div class="card">
-			<div class="item">
-				<h2>你渴望了解什么？</h2>
-				<h3>是切尔纳人的——</h3>
-				<img src="../img/story/Czyrni/Czyrni.png" alt="切尔纳人"/>
-				<p>旧故事？</p>
-				<p>动荡时的所做所为？</p>
-				<p>还是当下的故事？</p>
-				
-			</div>
-			<div class="item">
-				<h2>你渴望了解什么？</h2>
-				<h3>是派奥伦人的——</h3>
-				<img src="../img/story/Pyorun/Pyorun.png" alt="派奥伦人"/>
-				<p>旧故事？</p>
-				<p>动荡时的所做所为？</p>
-				<p>还是当下的故事？</p>
-				
-			</div>
-		</div>
+
+	<h2>杂项中现在仅有简单的地图展示，以后可能会增加更多东西在这里</h2>
+	<p>以下两张图片分别为迪斯马现在已经到达的两张村庄地图，第一张为蛙屋村，是迪斯马现在常驻的村庄，第二张为冬炉村，迪斯马所在村庄附近的主要通过种田谋生的村庄</p>
+	<p>更多图片由于技术限制必须放在另一页面，<a href="../detail/bonus2.html">点击前往</a></p>
+	<div id="slider">
+		<ul class="slides clearfix">
+			<li><img class="responsive" src="../img/story_detail/map/village/frogbach.png"></li>
+			<li><img class="responsive" src="../img/story_detail/map/village/winter_hearth.png"></li>
+		</ul>
+		<ul class="controls">
+			<li><img src="../img/all/prev.png" alt="previous"></li>
+			<li><img src="../img/all/next.png" alt="next"></li>
+		</ul>
+		<ul class="pagination">
+			<li class="active"></li>
+			<li></li>
+		</ul>
+	</div>
+	
 	</div>
 </div>
-
+	
+<script src="../js/easySlider.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#slider").easySlider( {
+			slideSpeed: 500,
+			paginationSpacing: "15px",
+			paginationDiameter: "12px",
+			paginationPositionFromBottom: "20px",
+			slidesClass: ".slides",
+			controlsClass: ".controls",
+			paginationClass: ".pagination"					
+		});
+	});
+</script>
 </body></html>
