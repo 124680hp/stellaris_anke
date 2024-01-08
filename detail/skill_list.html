@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html><head><style>body {
+   color: black;
+}
+</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>个人安科-网站分享</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+</head>
+<link rel="stylesheet" href="../css/index.css" />
+<link rel="stylesheet" href="../css/article.css" />
+<link rel="stylesheet" href="../css/table.css" />
+
+<body>
+<div class="container">
+	<div class="header">
+		<div class="dropdown">
+		<a href="../index.html">
+			<button class="dropbtn">首页</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../index.html">前往首页</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../background/index.html">
+			<button class="dropbtn">背景描述</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../background/index.html">背景描述</a>
+			<a href="#">测试1</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../detail/index.html">
+			<button class="dropbtn">现有数据</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../detail/index.html">现有数据</a>
+			<a href="../detail/character.html">角色模板</a>
+			<a href="../detail/character_form.html">新建角色</a>
+			<a href="../detail/character_list.html">角色列表</a>
+			<a href="../detail/race.html">种族模板</a>
+			<a href="../detail/race_form.html">新建种族</a>
+			<a href="../detail/race_list.html">种族列表</a>
+			<a href="../detail/item.html">道具模板</a>
+			<a href="../detail/item_form.html">新建道具</a>
+			<a href="../detail/item_list.html">道具列表</a>
+			<a href="../detail/skill.html">技能模板</a>
+			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/skill_list.html">技能列表</a>
+			<a href="../detail/bonus.html">杂项</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../story/index.html">
+			<button class="dropbtn">安科内容</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../story/index.html">安科内容</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="./index.html">
+			<button class="dropbtn">网站分享</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="./index.html">网站分享</a>
+		</div>
+	</div>
+</div>
+
+	<div class="content">
+	<div class="article">
+		<h2>本网页将展现已经出现在我的安科文本中的角色数据（静态形式）以及您创建的角色数据（动态形式）</h2>
+		<p>以下为已经出现在安科中的角色</p>
+		<table>
+            <tr>
+				<td>技能名：进食需求</td>
+				<td>简称：无</td>
+            </tr>
+            <tr>
+				<td colspan="2">所属类别：被动</td>
+            </tr>
+			<tr>
+				<td colspan="2">被动效果：每天需要消耗的食物为正常情况下的4/3</td>
+            </tr>
+			<tr>
+				<td colspan="2">技能详细描述：某些种族的天生负面被动</td>
+            </tr>
+		</table>
+		<table>
+            <tr>
+				<td>技能名：阅读情绪</td>
+				<td>简称：无</td>
+            </tr>
+            <tr>
+				<td colspan="2">所属类别：被动</td>
+            </tr>
+			<tr>
+				<td colspan="2">被动效果：可以轻微读取其它同种族或类似生物的情绪，难度70，检定属性感知，总骰点低于70不生效</td>
+            </tr>
+			<tr>
+				<td colspan="2">技能详细描述：某些种族的天赋</td>
+            </tr>
+		</table>
+		<p>以下略</p>
+		
+		<p>以下为您新建的技能</p>
+		<div id="tablesContainer">
+			<!-- 动态生成的表格将会放在这里 -->
+		</div>
+		<p>如果想要删除某项数据，请复制对应的自动编码至以下文本框中（表单会在刷新后消失）</p>
+		<form action="" method="" id="delete">
+			<div>
+				<p>请输入需要删除的数据的自动编码</p>
+				<input type="text" value="" id="uuid" required name="uuid" />
+			</div>
+			<div id="submit">
+				<input type="submit" value="提交" />
+			</div>
+		<form>
+		<p>以下为清空本地存储的按钮，请谨慎操作</p>
+		<button id="clearStorageButton">清空存储</button>
+	</div>
+	</div>
+	
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tablesContainer = document.getElementById('tablesContainer');
+
+    // 清空现有的表格容器内容
+    tablesContainer.innerHTML = '';
+
+    localforage.iterate(function(value, key) {
+        // 每次迭代都会执行此回调
+		if (value && value.f_type === "skill"){
+			// 当value存在，并且value.f_type等于"skill"时，才继续创建表
+			
+			// 创建一个新的表格已经表格体
+			var table = document.createElement('table');
+			var tbody = document.createElement('tbody');
+
+			//  读取表单中的数据
+			var name = value.name;
+            var alias = value.alias;
+            var type = value.type;
+			var detail = value.detail;
+			
+			var tr_1 = document.createElement('tr');
+			var td_name = document.createElement('td');
+			var td_alias = document.createElement('td');
+			
+			td_name.textContent = '技能名：' + name;
+			td_alias.textContent = '简称：' + alias;
+			
+			tr_1.appendChild(td_name);
+			tr_1.appendChild(td_alias);
+			tbody.appendChild(tr_1);
+			
+			var tr_2 = document.createElement('tr');
+			var td_type = document.createElement('td');
+			td_type.setAttribute('colspan', '2');
+			
+			td_type.textContent = '所属类别：' + type;
+			
+			tr_2.appendChild(td_type);
+			tbody.appendChild(tr_2);
+			
+			if (type === "主动"){
+				var cd = value.cd;
+				var active_effect = value.active_effect;
+				
+				var tr_3 = document.createElement('tr');
+				var td_cd = document.createElement('td');
+				td_cd.setAttribute('colspan', '2');
+			
+				td_cd.textContent = '冷却时间：' + cd;
+			
+				tr_3.appendChild(td_cd);
+				tbody.appendChild(tr_3);
+				
+				var tr_4 = document.createElement('tr');
+				var td_active_effect = document.createElement('td');
+				td_active_effect.setAttribute('colspan', '2');
+			
+				td_active_effect.textContent = '主动效果：' + active_effect;
+			
+				tr_4.appendChild(td_active_effect);
+				tbody.appendChild(tr_4);
+				
+			}else if (type === "被动"){
+				
+				var passive_effect = value.passive_effect;
+				
+				var tr_5 = document.createElement('tr');
+				var td_passive_effect = document.createElement('td');
+				td_passive_effect.setAttribute('colspan', '2');
+			
+				td_passive_effect.textContent = '被动效果：' + passive_effect;
+			
+				tr_5.appendChild(td_passive_effect);
+				tbody.appendChild(tr_5);
+				
+			}else{
+				var cd = value.cd;
+				var active_effect = value.active_effect;
+				
+				var tr_3 = document.createElement('tr');
+				var td_cd = document.createElement('td');
+				td_cd.setAttribute('colspan', '2');
+			
+				td_cd.textContent = '冷却时间：' + cd;
+			
+				tr_3.appendChild(td_cd);
+				tbody.appendChild(tr_3);
+				
+				var tr_4 = document.createElement('tr');
+				var td_active_effect = document.createElement('td');
+				td_active_effect.setAttribute('colspan', '2');
+			
+				td_active_effect.textContent = '主动效果：' + active_effect;
+			
+				tr_4.appendChild(td_active_effect);
+				tbody.appendChild(tr_4);
+				
+				var passive_effect = value.passive_effect;
+				
+				var tr_5 = document.createElement('tr');
+				var td_passive_effect = document.createElement('td');
+				td_passive_effect.setAttribute('colspan', '2');
+			
+				td_passive_effect.textContent = '被动效果：' + passive_effect;
+			
+				tr_5.appendChild(td_passive_effect);
+				tbody.appendChild(tr_5);
+				
+			}
+            
+			var tr_6 = document.createElement('tr');
+			var td_detail = document.createElement('td');
+			td_detail.setAttribute('colspan', '2');
+			
+			td_detail.textContent = '技能详细描述：' + detail;
+			
+			tr_6.appendChild(td_detail);
+			tbody.appendChild(tr_6);
+        
+			// 将表格体添加到表格中
+			table.appendChild(tbody);
+			// 为表格添加一个标题
+			var caption = table.createCaption();
+			caption.textContent = '自动编码为: ' + key + '的技能数据为————';
+
+			// 将表格添加到容器中
+			tablesContainer.appendChild(table);
+		}else{
+			// 如果value不存在或value.f_type不是"skill"，则跳过（可能存在其它项目也使用了localforage，提前规避）
+			console.log('跳过非技能类型数据或未定义f_type的项');
+		}
+    }).then(function() {
+        console.log('数据已经全部读取');
+    }).catch(function(err) {
+        // 发生错误时
+        console.error('迭代数据时出错:', err);
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var clearBtn = document.getElementById('clearStorageButton');
+
+    clearBtn.addEventListener('click', function() {
+        // 确认操作
+        if(confirm("确定要清空所有本地存储的数据吗？这个操作是不可逆的。")) {
+            localforage.clear().then(function() {
+                // 数据已被清除
+                alert('本地存储的数据已经成功清空。');
+            }).catch(function(err) {
+                // 发生错误
+                console.error('清空存储时出错:', err);
+                alert('清空存储失败。');
+            });
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('delete');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 防止表单的默认提交行为
+
+        var uuid = document.getElementById('uuid').value; // 获取用户输入的 UUID
+
+        if (!uuid) {
+            alert("请输入数据的自动编码。");
+            return;
+        }
+
+        // 调用 localForage 的 removeItem 方法来删除对应的数据
+        localforage.removeItem(uuid).then(function() {
+            console.log('数据删除成功');
+            alert('数据删除成功');
+            // 可能还想清除输入框的内容
+            document.getElementById('uuid').value = '';
+        }).catch(function(err) {
+            console.error('数据删除失败', err);
+            alert('数据删除失败');
+        });
+    });
+});
+</script>
+</body></html>

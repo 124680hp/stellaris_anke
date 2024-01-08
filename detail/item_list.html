@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html><head><style>body {
+   color: black;
+}
+</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>个人安科-网站分享</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+</head>
+<link rel="stylesheet" href="../css/index.css" />
+<link rel="stylesheet" href="../css/article.css" />
+<link rel="stylesheet" href="../css/table.css" />
+
+<body>
+<div class="header">
+		<div class="dropdown">
+		<a href="../index.html">
+			<button class="dropbtn">首页</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../index.html">前往首页</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../background/index.html">
+			<button class="dropbtn">背景描述</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../background/index.html">背景描述</a>
+			<a href="#">测试1</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../detail/index.html">
+			<button class="dropbtn">现有数据</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../detail/index.html">现有数据</a>
+			<a href="../detail/character.html">角色模板</a>
+			<a href="../detail/character_form.html">新建角色</a>
+			<a href="../detail/character_list.html">角色列表</a>
+			<a href="../detail/race.html">种族模板</a>
+			<a href="../detail/race_form.html">新建种族</a>
+			<a href="../detail/race_list.html">种族列表</a>
+			<a href="../detail/item.html">道具模板</a>
+			<a href="../detail/item_form.html">新建道具</a>
+			<a href="../detail/item_list.html">道具列表</a>
+			<a href="../detail/skill.html">技能模板</a>
+			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/skill_list.html">技能列表</a>
+			<a href="../detail/bonus.html">杂项</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="../story/index.html">
+			<button class="dropbtn">安科内容</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="../story/index.html">安科内容</a>
+		</div>
+	</div>
+	<div class="dropdown">
+		<a href="./index.html">
+			<button class="dropbtn">网站分享</button>
+		</a>
+		<div class="dropdown-content">
+			<a href="./index.html">网站分享</a>
+		</div>
+	</div>
+</div>
+
+	<div class="content">
+	<div class="article">
+		<h2>本网页将展现已经出现在我的安科文本中的物品数据（静态形式）以及您创建的物品数据（动态形式）</h2>
+		<p>以下为已经出现在安科中的物品</p>
+		<table>
+            <tr>
+				<td>物品名：新石器时代部落制石刀</td>
+				<td>别名：无</td>
+            </tr>
+            <tr>
+				<td>大小：小刀</td>
+				<td>重量：500g</td>
+			</tr>
+            <tr>
+				<td colspan="2">所属类别：近战武器</td>
+            </tr>
+            <tr>
+				<td>攻击消耗：无</td>
+				<td>每次消耗量：无</td>
+            </tr>
+            <tr>
+				<td>一回合可多段攻击几次：1</td>
+				<td>一回合可无惩罚多段攻击几次：1</td>
+            </tr>
+			<tr>
+				<td>命中计算公式————rd100（敏捷）</td>
+				<td>伤害计算公式————rd100（力量）</td>
+            </tr>
+			<tr>
+				<td colspan="2">武器特性————锋利</td>
+            </tr>
+			<tr>
+				<td colspan="2">附带技能以及被动：无</td>
+            </tr>
+			<tr>
+				<td colspan="2">物品详细描述：某个部落制造的打制石刀，还是比较锋利的</td>
+            </tr>
+		</table>
+		<p>以下略</p>
+		
+		<p>以下为您新建的物品</p>
+		<div id="tablesContainer">
+			<!-- 动态生成的表格将会放在这里 -->
+		</div>
+		<p>如果想要删除某项数据，请复制对应的自动编码至以下文本框中（表单会在刷新后消失）</p>
+		<form action="" method="" id="delete">
+			<div>
+				<p>请输入需要删除的数据的自动编码</p>
+				<input type="text" value="" id="uuid" required name="uuid" />
+			</div>
+			<div id="submit">
+				<input type="submit" value="提交" />
+			</div>
+		<form>
+		<p>以下为清空本地存储的按钮，请谨慎操作</p>
+		<button id="clearStorageButton">清空存储</button>
+	</div>
+	</div>
+	
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tablesContainer = document.getElementById('tablesContainer');
+
+    // 清空现有的表格容器内容
+    tablesContainer.innerHTML = '';
+
+    localforage.iterate(function(value, key) {
+        // 每次迭代都会执行此回调
+		if (value && value.f_type === "item"){
+			// 当value存在，并且value.f_type等于"item"时，才继续创建表
+			
+			// 创建一个新的表格已经表格体
+			var table = document.createElement('table');
+			var tbody = document.createElement('tbody');
+
+			//  读取表单中的必有数据
+			var name = value.name;
+            var alias = value.alias;
+            var size = value.size;
+			var weight = value.weight;
+			var type = value.type;
+			var skills = value.skills;
+			var detail = value.detail;
+			
+			var tr_1 = document.createElement('tr');
+			var td_name = document.createElement('td');
+			var td_alias = document.createElement('td');
+			
+			td_name.textContent = '物品名：' + name;
+			td_alias.textContent = '别名：' + alias;
+			
+			tr_1.appendChild(td_name);
+			tr_1.appendChild(td_alias);
+			tbody.appendChild(tr_1);
+			
+			var tr_2 = document.createElement('tr');
+			var td_size = document.createElement('td');
+			var td_weight = document.createElement('td');
+			
+			td_size.textContent = '大小：' + size;
+			td_weight.textContent = '重量：' + weight;
+			
+			tr_2.appendChild(td_size);
+			tr_2.appendChild(td_weight);
+			tbody.appendChild(tr_2);
+			
+			if (type === "武器"){
+				var	weapon_type = value.w_type;
+				var	w_consuming = value.w_consuming;
+				var	w_consuming_num = value.w_consuming_num
+				var	attack_times = value.attack_times;
+				var	unpunished_attacks_times = value.unpunished_attacks_times;
+				var	ar_strength = +value.ar_strength;
+				var	ar_wisdom = +value.ar_wisdom;
+				var	ar_constitution = +value.ar_constitution;
+				var	ar_intelligence = +value.ar_intelligence;
+				var	ar_sense = +value.ar_sense;
+				var	ar_charisma = +value.ar_charisma;
+				var	ar_eloquence = +value.ar_eloquence;
+				var	ar_dexterity = +value.ar_dexterity;
+				var	ar_vary_times = +value.ar_vary_times;
+				var	ar_variable = +value.ar_variable;
+				var	ar_stable = +value.ar_stable;
+				var	dr_strength = +value.dr_strength;
+				var	dr_wisdom = +value.dr_wisdom;
+				var	dr_constitution = +value.dr_constitution;
+				var	dr_intelligence = +value.dr_intelligence;
+				var	dr_sense = +value.dr_sense;
+				var	dr_charisma = +value.dr_charisma;
+				var	dr_eloquence = +value.dr_eloquence;
+				var	dr_dexterity = +value.dr_dexterity;
+				var	dr_vary_times = +value.dr_vary_times;
+				var	dr_variable = +value.dr_variable;
+				var	dr_stable = +value.dr_stable;
+				var	wc = value.wc;
+			
+				var tr_3 = document.createElement('tr');
+				var td_type = document.createElement('td');
+				td_type.setAttribute('colspan', '2');
+			
+				td_type.textContent = '所属类别：' + weapon_type + '武器';
+			
+				tr_3.appendChild(td_type);
+				tbody.appendChild(tr_3);
+			
+				var tr_4 = document.createElement('tr');
+				var td_con = document.createElement('td');
+				var td_con_num = document.createElement('td');
+			
+				td_con.textContent = '攻击消耗：' + w_consuming;
+				td_con_num.textContent = '每次消耗量：' + w_consuming_num;
+			
+				tr_4.appendChild(td_con);
+				tr_4.appendChild(td_con_num);
+				tbody.appendChild(tr_4);
+			
+				var tr_5 = document.createElement('tr');
+				var td_attack_times = document.createElement('td');
+				var td_unpunished_attacks_times = document.createElement('td');
+			
+				td_attack_times.textContent = '一回合可多段攻击几次：' + attack_times;
+				td_unpunished_attacks_times.textContent = '一回合可无惩罚多段攻击几次：' + unpunished_attacks_times;
+			
+				tr_5.appendChild(td_attack_times);
+				tr_5.appendChild(td_unpunished_attacks_times);
+				tbody.appendChild(tr_5);
+			
+				var tr_6 = document.createElement('tr');
+				var td_a_math = document.createElement('td');
+				var td_d_math = document.createElement('td');
+			
+				var a_components = [
+					ar_strength, ar_wisdom, ar_constitution, ar_intelligence,
+					ar_sense, ar_charisma, ar_eloquence, ar_dexterity
+				];
+			
+				var attributeNames = [
+					"（力量）", "（意志）", "（体质）", "（智力）",
+					"（感知）", "（魅力）", "（口才）", "（敏捷）"
+				];
+			
+				var a_formulaComponents = a_components.map((component, index) => component !== 0 ? 'rd' + component + attributeNames[index] : '').filter(Boolean);
+
+				var a_formulaString = a_formulaComponents.join('+');
+			
+				a_formulaString = '命中计算公式————' + a_formulaString;
+			
+				if (a_formulaString && ar_vary_times !== 0){
+					if  (ar_vary_times === 1 && ar_variable !== 0){
+					a_formulaString =  a_formulaString + 'rd' + ar_variable;
+					}
+					else if (ar_variable !== 0) {
+					a_formulaString =  a_formulaString + ar_vary_times + 'rd' + ar_variable;
+					}
+				}else if (ar_vary_times !== 0){
+					if  (ar_vary_times === 1 && ar_variable !== 0){
+					a_formulaString =  a_formulaString + '+rd' + ar_variable;
+					}
+					else if (ar_variable !== 0) {
+					a_formulaString =  a_formulaString + '+' + ar_vary_times + 'rd' + ar_variable;
+					}
+				}
+			
+				if (a_formulaString && ar_stable !== 0){
+					if  (ar_stable > 0) {
+					a_formulaString =  a_formulaString + ar_stable;
+					}
+					else {
+					a_formulaString =  a_formulaString + ar_stable;
+					}
+				}else if (ar_stable !== 0){
+					if  (ar_stable > 0) {
+					a_formulaString =  a_formulaString + '+' + ar_stable;
+					}
+					else {
+					a_formulaString =  a_formulaString + ar_stable;
+					}
+				}
+			
+				var d_components = [
+					dr_strength, dr_wisdom, dr_constitution, dr_intelligence,
+					dr_sense, dr_charisma, dr_eloquence, dr_dexterity
+				];
+				
+				var d_formulaComponents = d_components.map((component, index) => component !== 0 ? 'rd' + component + attributeNames[index] : '').filter(Boolean);
+
+				var d_formulaString = d_formulaComponents.join('+');
+				
+				
+				
+				if (!d_formulaString && dr_vary_times !== 0){
+					if  (dr_vary_times === 1 && dr_variable !== 0){
+					d_formulaString =  d_formulaString + 'rd' + dr_variable;
+					}
+					else if (dr_variable !== 0) {
+					d_formulaString =  d_formulaString + dr_vary_times + 'rd' + dr_variable;
+					}
+				}else if (dr_vary_times !== 0){
+					if  (dr_vary_times === 1 && dr_variable !== 0){
+					d_formulaString =  d_formulaString + '+rd' + dr_variable;
+					}
+					else if (dr_variable !== 0) {
+					d_formulaString =  d_formulaString + '+' + dr_vary_times + 'rd' + dr_variable;
+					}
+				}
+			
+				if (!d_formulaString && dr_stable !== 0){
+					if  (dr_stable > 0){
+					d_formulaString =  d_formulaString + dr_stable;
+					}
+					else{
+					d_formulaString =  d_formulaString + dr_stable;
+					}
+				}else if (dr_stable !== 0){
+					if  (dr_stable > 0){
+					d_formulaString =  d_formulaString + '+' + dr_stable;
+					}
+					else{
+					d_formulaString =  d_formulaString + dr_stable;
+					}
+				}
+				
+				d_formulaString = '伤害计算公式————' + d_formulaString;
+			
+				td_a_math.textContent = a_formulaString;
+				td_d_math.textContent = d_formulaString;
+			
+				tr_6.appendChild(td_a_math);
+				tr_6.appendChild(td_d_math);
+				tbody.appendChild(tr_6);
+			
+				var tr_7 = document.createElement('tr');
+				var td_wc = document.createElement('td');
+				td_wc.setAttribute('colspan', '2');
+			
+				td_wc.textContent = wc.length > 0 ? wc.join(", ") : "无";
+				td_wc.textContent = '武器特性————' + td_wc.textContent;
+			
+			
+				tr_7.appendChild(td_wc);
+				tbody.appendChild(tr_7);
+			
+				var tr_8 = document.createElement('tr');
+				var td_skills = document.createElement('td');
+				td_skills.setAttribute('colspan', '2');
+			
+				td_skills.textContent = '附带技能以及被动：' + skills;
+			
+				tr_8.appendChild(td_skills);
+				tbody.appendChild(tr_8);
+			
+			
+				var tr_9 = document.createElement('tr');
+				var td_detail = document.createElement('td');
+				td_detail.setAttribute('colspan', '2');
+			
+				td_detail.textContent = '物品详细描述：' + detail;
+			
+				tr_9.appendChild(td_detail);
+				tbody.appendChild(tr_9);
+			
+			
+			}else if (type === "防具"){
+			
+				var anti_sharp_rate = +value.anti_sharp_rate;
+				var anti_blinding_rate = +value.anti_blinding_rate;
+				var anti_burning_rate = +value.anti_burning_rate;
+				var anti_electricity_rate = +value.anti_electricity_rate;
+				var anti_freezing_rate = +value.anti_freezing_rate;
+				var anti_heavy_rate = +value.anti_heavy_rate;
+				var anti_melee_rate = +value.anti_melee_rate;
+				var anti_psionic_rate = +value.anti_psionic_rate;
+				var anti_ranged_rate = +value.anti_ranged_rate;
+				var counter_melee_rate = +value.counter_melee_rate;
+				var counter_ranged_rate = +value.counter_ranged_rate;
+				
+			
+				var components = [
+					anti_sharp_rate, anti_heavy_rate, anti_melee_rate, anti_ranged_rate,
+					anti_burning_rate, anti_electricity_rate, anti_freezing_rate, anti_blinding_rate,
+					anti_psionic_rate, counter_melee_rate, counter_ranged_rate
+				];
+			
+				var attributeNames = [
+					"抗锐器", "抗钝器", "抗近战", "抗远程",
+					"防火", "防电", "抗寒", "防闪光",
+					"抗灵能","近战反伤","远程反伤"
+				];
+			
+				var formulaComponents = components.map((component, index) => component !== 0 ? attributeNames[index] + component : '').filter(Boolean);
+				
+				var formulaString = formulaComponents.join('，');
+			
+				var tr_3 = document.createElement('tr');
+				var td_type = document.createElement('td');
+				td_type.setAttribute('colspan', '2');
+			
+				td_type.textContent = '所属类别：' + type;
+			
+				tr_3.appendChild(td_type);
+				tbody.appendChild(tr_3);
+			
+				var tr_4 = document.createElement('tr');
+				var td_armor_effect = document.createElement('td');
+				td_armor_effect.setAttribute('colspan', '2');
+			
+				td_armor_effect.textContent = '防具效果————' + formulaString;
+			
+				tr_4.appendChild(td_armor_effect);
+				tbody.appendChild(tr_4);
+			
+				var tr_5 = document.createElement('tr');
+				var td_skills = document.createElement('td');
+				td_skills.setAttribute('colspan', '2');
+			
+				td_skills.textContent = '附带技能以及被动：' + skills;
+			
+				tr_5.appendChild(td_skills);
+				tbody.appendChild(tr_5);
+			
+			
+				var tr_6 = document.createElement('tr');
+				var td_detail = document.createElement('td');
+				td_detail.setAttribute('colspan', '2');
+			
+				td_detail.textContent = '物品详细描述：' + detail;
+			
+				tr_6.appendChild(td_detail);
+				tbody.appendChild(tr_6);
+			
+			}else if (type === "消耗品"){
+				
+				var c_consuming_effect = value.c_consuming_effect
+				var c_consuming_num = value.c_consuming_num;
+				
+				var tr_3 = document.createElement('tr');
+				var td_type = document.createElement('td');
+				td_type.setAttribute('colspan', '2');
+			
+				td_type.textContent = '所属类别：' + type;
+			
+				tr_3.appendChild(td_type);
+				tbody.appendChild(tr_3);
+				
+				var tr_4 = document.createElement('tr');
+				var td_consuming_effect = document.createElement('td');
+				var td_consuming_num = document.createElement('td');
+			
+				td_consuming_num.textContent = '每次消耗量：' + c_consuming_num;
+				td_consuming_effect.textContent = '消耗效果：' + c_consuming_effect;
+			
+				tr_4.appendChild(td_consuming_num);
+				tr_4.appendChild(td_consuming_effect);
+				tbody.appendChild(tr_4);
+				
+				var tr_5 = document.createElement('tr');
+				var td_skills = document.createElement('td');
+				td_skills.setAttribute('colspan', '2');
+			
+				td_skills.textContent = '附带技能以及被动：' + skills;
+			
+				tr_5.appendChild(td_skills);
+				tbody.appendChild(tr_5);
+			
+			
+				var tr_6 = document.createElement('tr');
+				var td_detail = document.createElement('td');
+				td_detail.setAttribute('colspan', '2');
+			
+				td_detail.textContent = '物品详细描述：' + detail;
+			
+				tr_6.appendChild(td_detail);
+				tbody.appendChild(tr_6);
+			}else{
+				var tr_3 = document.createElement('tr');
+				var td_type = document.createElement('td');
+				td_type.setAttribute('colspan', '2');
+			
+				td_type.textContent = '所属类别：' + type;
+			
+				tr_3.appendChild(td_type);
+				tbody.appendChild(tr_3);
+			
+				var tr_4 = document.createElement('tr');
+				var td_skills = document.createElement('td');
+				td_skills.setAttribute('colspan', '2');
+			
+				td_skills.textContent = '附带技能以及被动：' + skills;
+			
+				tr_4.appendChild(td_skills);
+				tbody.appendChild(tr_4);
+			
+			
+				var tr_5 = document.createElement('tr');
+				var td_detail = document.createElement('td');
+				td_detail.setAttribute('colspan', '2');
+			
+				td_detail.textContent = '物品详细描述：' + detail;
+			
+				tr_5.appendChild(td_detail);
+				tbody.appendChild(tr_5);
+			}
+        
+			// 将表格体添加到表格中
+			table.appendChild(tbody);
+			// 为表格添加一个标题
+			var caption = table.createCaption();
+			caption.textContent = '自动编码为: ' + key + '的物品数据为————';
+
+			// 将表格添加到容器中
+			tablesContainer.appendChild(table);
+		}else{
+			// 如果value不存在或value.f_type不是"item"，则跳过（可能存在其它项目也使用了localforage，提前规避）
+			console.log('跳过非物品类型数据或未定义f_type的项');
+		}
+    }).then(function() {
+        console.log('数据已经全部读取');
+    }).catch(function(err) {
+        // 发生错误时
+        console.error('迭代数据时出错:', err);
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var clearBtn = document.getElementById('clearStorageButton');
+
+    clearBtn.addEventListener('click', function() {
+        // 确认操作
+        if(confirm("确定要清空所有本地存储的数据吗？这个操作是不可逆的。")) {
+            localforage.clear().then(function() {
+                // 数据已被清除
+                alert('本地存储的数据已经成功清空。');
+            }).catch(function(err) {
+                // 发生错误
+                console.error('清空存储时出错:', err);
+                alert('清空存储失败。');
+            });
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('delete');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 防止表单的默认提交行为
+
+        var uuid = document.getElementById('uuid').value; // 获取用户输入的 UUID
+
+        if (!uuid) {
+            alert("请输入数据的自动编码。");
+            return;
+        }
+
+        // 调用 localForage 的 removeItem 方法来删除对应的数据
+        localforage.removeItem(uuid).then(function() {
+            console.log('数据删除成功');
+            alert('数据删除成功');
+            // 可能还想清除输入框的内容
+            document.getElementById('uuid').value = '';
+        }).catch(function(err) {
+            console.error('数据删除失败', err);
+            alert('数据删除失败');
+        });
+    });
+});
+</script>
+</body></html>

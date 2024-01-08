@@ -16,7 +16,7 @@
 <body>
 <div>
 <div class="header">
-	<div class="dropdown">
+		<div class="dropdown">
 		<a href="../index.html">
 			<button class="dropbtn">首页</button>
 		</a>
@@ -39,14 +39,18 @@
 		</a>
 		<div class="dropdown-content">
 			<a href="../detail/index.html">现有数据</a>
-			<a href="../detail/character.html">角色列表</a>
+			<a href="../detail/character.html">角色模板</a>
 			<a href="../detail/character_form.html">新建角色</a>
-			<a href="../detail/race.html">种族列表</a>
+			<a href="../detail/character_list.html">角色列表</a>
+			<a href="../detail/race.html">种族模板</a>
 			<a href="../detail/race_form.html">新建种族</a>
-			<a href="../detail/item.html">道具列表</a>
+			<a href="../detail/race_list.html">种族列表</a>
+			<a href="../detail/item.html">道具模板</a>
 			<a href="../detail/item_form.html">新建道具</a>
-			<a href="../detail/skill.html">技能列表</a>
+			<a href="../detail/item_list.html">道具列表</a>
+			<a href="../detail/skill.html">技能模板</a>
 			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/skill_list.html">技能列表</a>
 			<a href="../detail/bonus.html">杂项</a>
 		</div>
 	</div>
@@ -59,11 +63,11 @@
 		</div>
 	</div>
 	<div class="dropdown">
-		<a href="../share/index.html">
+		<a href="./index.html">
 			<button class="dropbtn">网站分享</button>
 		</a>
 		<div class="dropdown-content">
-			<a href="../share/index.html">网站分享</a>
+			<a href="./index.html">网站分享</a>
 		</div>
 	</div>
 </div>
@@ -71,6 +75,7 @@
 <div class="container">
 	<div class="content">
 		<h1>新建物品</h1>
+		<p>提示：成功提交后数据依靠localforage存储于本地</p>
 		<form action="" method="post" style="margin: auto; min-width: 100%;" id="item_form">
 			<div class="form_item">
 				<p class="title">物品名：</p>
@@ -131,7 +136,7 @@
 			</div>
 			<div class="form_item" id="accuracy_affecting_stable_factors">
 				<p class="title">固定命中占比（这部分命中不受属性影响，0表示无需计算）：</p>
-				变化骰个数：<input type="text" value="1" pattern="[0-9]*" id="ar_vary_times" name="ar_vary_times" />
+				变化骰个数：<input type="text" value="0" pattern="[0-9]*" id="ar_vary_times" name="ar_vary_times" />
 				变化骰范围：<input type="text" value="0" pattern="[0-9]*" id="ar_variable" name="ar_variable" />
 				固定值：<input type="text" value="50" id="ar_stable" name="stable" />
 			</div>
@@ -149,7 +154,7 @@
 			<div class="form_item" id="damage_affecting_stable_factors">
 				<p class="title">固定伤害占比（这部分伤害不受属性影响，0表示无需计算）：</p>
 				变化骰个数：<input type="text" value="1" pattern="[0-9]*" id="dr_vary_times" name="dr_vary_times" />
-				变化骰范围：<input type="text" value="0" pattern="[0-9]*" id="dr_variable" name="dr_variable" />
+				变化骰范围：<input type="text" value="100" pattern="[0-9]*" id="dr_variable" name="dr_variable" />
 				固定值：<input type="text" value="50" id="dr_stable" name="stable" />
 			</div>
 			<div class="form_item" id="weapon_characteristics">
@@ -180,7 +185,7 @@
 				抗钝器：<input type="text" value="0" id="anti_heavy_rate" name="armor_effect" />
 				抗近战：<input type="text" value="0" id="anti_melee_rate" name="armor_effect" />
 				抗远程：<input type="text" value="0" id="anti_ranged_rate" name="armor_effect" />
-				防火：<input type="text" value="0" id="anti_buring_rate" name="armor_effect" />
+				防火：<input type="text" value="0" id="anti_burning_rate" name="armor_effect" />
 				防电：<input type="text" value="0" id="anti_electricity_rate" name="armor_effect" />
 				抗寒：<input type="text" value="0" id="anti_freezing_rate" name="armor_effect" />
 				防闪光：<input type="text" value="0" id="anti_blinding_rate" name="armor_effect" />
@@ -403,19 +408,20 @@ document.addEventListener('DOMContentLoaded', function() {
 			};
 		}else if(i_type === '防具'){
 			var anti_blinding_rate = document.getElementById('anti_blinding_rate').value;
-			var anti_buring_rate = document.getElementById('anti_buring_rate').value;
+			var anti_burning_rate = document.getElementById('anti_burning_rate').value;
 			var anti_electricity_rate = document.getElementById('anti_electricity_rate').value;
 			var anti_freezing_rate = document.getElementById('anti_freezing_rate').value;
 			var anti_heavy_rate = document.getElementById('anti_heavy_rate').value;
 			var anti_melee_rate = document.getElementById('anti_melee_rate').value;
 			var anti_psionic_rate = document.getElementById('anti_psionic_rate').value;
 			var anti_ranged_rate = document.getElementById('anti_ranged_rate').value;
+			var anti_sharp_rate = document.getElementById('anti_sharp_rate').value;
 			var counter_melee_rate = document.getElementById('counter_melee_rate').value;
 			var counter_ranged_rate = document.getElementById('counter_ranged_rate').value;
 			
 			if (
 				!anti_blinding_rate ||
-				!anti_buring_rate ||
+				!anti_burning_rate ||
 				!anti_electricity_rate ||
 				!anti_freezing_rate ||
 				!anti_heavy_rate ||
@@ -423,7 +429,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				!anti_psionic_rate ||
 				!anti_ranged_rate ||
 				!counter_melee_rate ||
-				!counter_ranged_rate
+				!counter_ranged_rate ||
+				!anti_sharp_rate
 			) {
 				alert("还有防具特性表单项未填写，请完成填写。");
 				return;
@@ -436,8 +443,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			size: document.getElementById('size').value,
 			weight: document.getElementById('weight').value,
 			type: i_type,
+			anti_sharp_rate: anti_sharp_rate,
 			anti_blinding_rate: anti_blinding_rate,
-			anti_buring_rate: anti_buring_rate,
+			anti_burning_rate: anti_burning_rate,
 			anti_electricity_rate: anti_electricity_rate,
 			anti_freezing_rate: anti_freezing_rate,
 			anti_heavy_rate: anti_heavy_rate,
@@ -483,15 +491,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			};
 		}
 		
-		// 使用uuidv4生成标识符以存储数据
-		var ID = uuidv4();
+		// 使用uuid.v4生成标识符以存储数据
+		var ID = uuid.v4();
 		
         // 使用 localForage 保存数据
-        localForage.setItem(ID, formData).then(function() {
-            console.log('表单内容已保存');
-            
+        localforage.setItem(ID, formData).then(function() {
+            console.log('表单内容已保存，自动编号为：'+ID);
+            alert("表单内容已保存");
         }).catch(function(err) {
             console.error('表单内容保存失败', err);
+			alert("表单内容保存失败");
         });
     });
 });

@@ -15,7 +15,7 @@
 <body>
 <div>
 <div class="header">
-	<div class="dropdown">
+		<div class="dropdown">
 		<a href="../index.html">
 			<button class="dropbtn">首页</button>
 		</a>
@@ -38,14 +38,18 @@
 		</a>
 		<div class="dropdown-content">
 			<a href="../detail/index.html">现有数据</a>
-			<a href="../detail/character.html">角色列表</a>
+			<a href="../detail/character.html">角色模板</a>
 			<a href="../detail/character_form.html">新建角色</a>
-			<a href="../detail/race.html">种族列表</a>
+			<a href="../detail/character_list.html">角色列表</a>
+			<a href="../detail/race.html">种族模板</a>
 			<a href="../detail/race_form.html">新建种族</a>
-			<a href="../detail/item.html">道具列表</a>
+			<a href="../detail/race_list.html">种族列表</a>
+			<a href="../detail/item.html">道具模板</a>
 			<a href="../detail/item_form.html">新建道具</a>
-			<a href="../detail/skill.html">技能列表</a>
+			<a href="../detail/item_list.html">道具列表</a>
+			<a href="../detail/skill.html">技能模板</a>
 			<a href="../detail/skill_form.html">新建技能</a>
+			<a href="../detail/skill_list.html">技能列表</a>
 			<a href="../detail/bonus.html">杂项</a>
 		</div>
 	</div>
@@ -58,11 +62,11 @@
 		</div>
 	</div>
 	<div class="dropdown">
-		<a href="../share/index.html">
+		<a href="./index.html">
 			<button class="dropbtn">网站分享</button>
 		</a>
 		<div class="dropdown-content">
-			<a href="../share/index.html">网站分享</a>
+			<a href="./index.html">网站分享</a>
 		</div>
 	</div>
 </div>
@@ -70,6 +74,7 @@
 <div class="container">
 	<div class="content">
 		<h1>新建角色</h1>
+		<p>提示：成功提交后数据依靠localforage存储于本地</p>
 		<form action="" method="post" style="margin: auto;" id="character_form">
 			<div class="form_item">
 				<p class="title">角色名：</p>
@@ -156,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             name: document.getElementById('name').value,
             alias: document.getElementById('alias').value,
             race: document.getElementById('race').value,
+			birth: document.getElementById('birth').value,
             sex: document.querySelector('input[name="sex"]:checked').value,
             strength: document.getElementById('strength').value,
             wisdom: document.getElementById('wisdom').value,
@@ -175,15 +181,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		// 利用了 required 来保证所以表单项已被填写，因此不检查数据完整性
 		
-		// 使用uuidv4生成标识符以存储数据
-		var ID = uuidv4();
+		// 使用uuid.v4生成标识符以存储数据
+		var ID = uuid.v4();
 		
         // 使用 localForage 保存数据
-        localForage.setItem(ID, formData).then(function() {
-            console.log('表单内容已保存');
-            
+        localforage.setItem(ID, formData).then(function() {
+            console.log('表单内容已保存，自动编号为：'+ID);
+            alert("表单内容已保存");
         }).catch(function(err) {
             console.error('表单内容保存失败', err);
+			alert("表单内容保存失败");
         });
     });
 });
