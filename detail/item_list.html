@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			tbody.appendChild(tr_2);
 			
 			if (type === "武器"){
-				var	weapon_type = value.w_type;
+				var	weapon_type = value.weapon_type;
 				var	w_consuming = value.w_consuming;
 				var	w_consuming_num = value.w_consuming_num
 				var	attack_times = value.attack_times;
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			
 				a_formulaString = '命中计算公式————' + a_formulaString;
 			
-				if (a_formulaString && ar_vary_times !== 0){
+				if (!a_formulaString && ar_vary_times !== 0){
 					if  (ar_vary_times === 1 && ar_variable !== 0){
 					a_formulaString =  a_formulaString + 'rd' + ar_variable;
 					}
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 				}
 			
-				if (a_formulaString && ar_stable !== 0){
+				if (!a_formulaString && ar_stable !== 0){
 					if  (ar_stable > 0) {
 					a_formulaString =  a_formulaString + ar_stable;
 					}
